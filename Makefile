@@ -1,7 +1,7 @@
 .SILENT:
 
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -g -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
 LDFLAGS = -lm
 TARGET = pc
 SRC = main.c queue.c
