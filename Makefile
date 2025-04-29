@@ -1,25 +1,34 @@
 .SILENT:
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
-LDFLAGS = -lm
-TARGET = pc
-SRC = main.c queue.c
-OBJ = main.o queue.o
-DEPS = work.h queue.h
+
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = bin
+
+# Debug build with sanitizers
+CFLAGS = -I$(INC_DIR) -Wall -Wextra -g -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS = -fsanitize=address,undefined -lm
+
+# For final release, use:
+# CFLAGS = -I$(INC_DIR) -Wall -O3
+# LDFLAGS = -lm
+
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+
+TARGET = $(BUILD_DIR)/pc
 
 all: $(TARGET)
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)
+$(TARGET): $(OBJS) | $(BUILD_DIR)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
-%.o: %.c $(DEPS)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
 clean:
-	rm -f $(TARGET) $(OBJ)
-
-run: $(TARGET)
-	./$(TARGET)
-
-.PHONY: all clean run
+	rm -rf $(BUILD_DIR)

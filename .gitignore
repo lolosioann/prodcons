@@ -1,1 +1,6 @@
 .vscode/
+bin/
+plots/
+results.txt
+plot.jl
+test.sh

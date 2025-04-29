@@ -9,7 +9,7 @@
 #define LOOP 150 // Number of times the producers will loop
 #define ANG 10   // Size of the array to hold the angles
 #define PRODSIZE 100
-#define CONSIZE 100
+#define CONSIZE 10
 
 // Structure for timing queue processing
 typedef struct {
@@ -28,27 +28,8 @@ timeQueue start;
 timeQueue end;
 atomic_int stop_flag = 0;
 
-int main(int argc, char *argv[]) {
-
-    // read command line arguments
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <number of producers> <number of consumers>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-    int PRODSIZE = atoi(argv[1]);
-    int CONSIZE = atoi(argv[2]);
-    if (PRODSIZE <= 0 || CONSIZE <= 0) {
-        fprintf(stderr, "Error: Number of producers and consumers must be positive integers.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (PRODSIZE > 1000 || CONSIZE > 1000) {
-        fprintf(stderr, "Error: Number of producers and consumers must be less than or equal to 100.\n");
-        exit(EXIT_FAILURE);
-    }
-
-
-
+int main() {
+    // Initialize the start and end time queues
     queue *fifo = queueInit();
     if (fifo == NULL) {
         fprintf(stderr, "Error: Queue initialization failed.\n");
